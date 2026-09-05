@@ -2,9 +2,14 @@ const path = require("path");
 const { DatabaseSync } = require("node:sqlite");
 const bcrypt = require("bcryptjs");
 
-const database = new DatabaseSync(
-  process.env.DATABASE_PATH || path.join(__dirname, "..", "database.sqlite"),
-);
+// O sistema de arquivos do bundle de uma Vercel Function é somente leitura.
+// Em desenvolvimento mantemos o banco ao lado do projeto; na Vercel usamos
+// /tmp, o único local gravável. Esse arquivo é efêmero: antes de usar o
+// sistema em produção, migre os dados e as sessões para um banco gerenciado.
+const defaultDatabasePath = process.env.VERCEL
+  ? path.join(process.env.TMPDIR || "/tmp", "portal-mamae-margarida.sqlite")
+  : path.join(__dirname, "..", "database.sqlite");
+const database = new DatabaseSync(process.env.DATABASE_PATH || defaultDatabasePath);
 database.exec("PRAGMA journal_mode = WAL");
 database.exec("PRAGMA foreign_keys = ON");
 

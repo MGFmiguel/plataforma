@@ -24,7 +24,11 @@ test("cadastro, acesso protegido e logout", async () => {
     const requestWithoutCsrf = await fetch(`${baseUrl}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: anonymousCookie },
-      body: JSON.stringify({ name: "Teste Seguro", email, password: "senha-de-teste-segura" }),
+      body: JSON.stringify({
+        name: "Teste Seguro",
+        email,
+        password: "senha12",
+      }),
     });
     assert.equal(requestWithoutCsrf.status, 403);
 
@@ -35,7 +39,11 @@ test("cadastro, acesso protegido e logout", async () => {
         Cookie: anonymousCookie,
         "X-CSRF-Token": csrfToken,
       },
-      body: JSON.stringify({ name: "Teste Seguro", email, password: "senha-de-teste-segura" }),
+      body: JSON.stringify({
+        name: "Teste Seguro",
+        email,
+        password: "senha12",
+      }),
     });
     assert.equal(registerResponse.status, 201);
     const registration = await registerResponse.json();
@@ -48,7 +56,10 @@ test("cadastro, acesso protegido e logout", async () => {
 
     const logoutResponse = await fetch(`${baseUrl}/api/auth/logout`, {
       method: "POST",
-      headers: { Cookie: authenticatedCookie, "X-CSRF-Token": registration.csrfToken },
+      headers: {
+        Cookie: authenticatedCookie,
+        "X-CSRF-Token": registration.csrfToken,
+      },
     });
     assert.equal(logoutResponse.status, 200);
 
