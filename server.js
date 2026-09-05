@@ -15,18 +15,21 @@ try {
 const app = express();
 const port = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === "production";
+const sessionSecret =
+  process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
 if (!process.env.SESSION_SECRET) {
-  if (isProduction) throw new Error("SESSION_SECRET deve ser definido no ambiente de produção.");
-  process.env.SESSION_SECRET = crypto.randomBytes(32).toString("hex");
-  console.warn("SESSION_SECRET não definido: usando um segredo temporário para desenvolvimento.");
+  console.warn(
+    "SESSION_SECRET não definido: usando um segredo temporário. Configure SESSION_SECRET na Vercel para manter sessões entre instâncias.",
+  );
 }
 if (isProduction) app.set("trust proxy", 1);
 
 app.disable("x-powered-by");
 app.use((request, response, next) => {
   response.set({
-    "Content-Security-Policy": "default-src 'self'; style-src 'self'; script-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+    "Content-Security-Policy":
+      "default-src 'self'; style-src 'self'; script-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
@@ -37,7 +40,7 @@ app.use(express.json({ limit: "16kb" }));
 app.use(
   session({
     store: new SqliteSessionStore(database),
-    secret: process.env.SESSION_SECRET,
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -51,11 +54,16 @@ app.use(
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 
-app.get(["/dashboard", "/dashboard.html"], requirePageAuth, (request, response) =>
-  response.sendFile(path.join(__dirname, "public", "dashboard.html")),
+app.get(
+  ["/dashboard", "/dashboard.html"],
+  requirePageAuth,
+  (request, response) =>
+    response.sendFile(path.join(__dirname, "public", "dashboard.html")),
 );
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/api", (request, response) => response.status(404).json({ error: "Rota nao encontrada." }));
+app.use("/api", (request, response) =>
+  response.status(404).json({ error: "Rota nao encontrada." }),
+);
 app.get("*", (request, response) =>
   response.sendFile(path.join(__dirname, "public", "index.html")),
 );
@@ -63,11 +71,15 @@ app.get("*", (request, response) =>
 app.use((error, request, response, next) => {
   console.error(error);
   if (response.headersSent) return next(error);
-  response.status(500).json({ error: "Ocorreu um erro inesperado. Tente novamente." });
+  response
+    .status(500)
+    .json({ error: "Ocorreu um erro inesperado. Tente novamente." });
 });
 
 if (require.main === module) {
-  app.listen(port, () => console.log(`Portal Mamae Margarida em http://localhost:${port}`));
+  app.listen(port, () =>
+    console.log(`Portal Mamae Margarida em http://localhost:${port}`),
+  );
 }
 
 module.exports = app;
