@@ -87,30 +87,35 @@ router.post(
 
 router.post(
   "/register",
-  registerLimit,
   requireCsrf,
-  async (request, response, next) => {
-    const { name, email, password } = request.body;
-    const validation = validateRegistration(name, email, password);
-    if (validation.error)
+  (request, response, next) => {
+    const validation = validateRegistration(
+      request.body.name,
+      request.body.email,
+      request.body.password,
+    );
+    if (validation.error) {
       return response.status(400).json({ error: validation.error });
-
+    }
+    request.registration = validation;
+    next();
+  },
+  registerLimit,
+  async (request, response, next) => {
     try {
       const result = await database.createUser(
-        validation.normalizedName,
-        validation.normalizedEmail,
-        await bcrypt.hash(validation.normalizedPassword, 12),
+        request.registration.normalizedName,
+        request.registration.normalizedEmail,
+        await bcrypt.hash(request.registration.normalizedPassword, 12),
       );
       const csrfToken = await createAuthenticatedSession(
         request,
         result.lastInsertRowid,
       );
-      response
-        .status(201)
-        .json({
-          user: await database.findUserById(result.lastInsertRowid),
-          csrfToken,
-        });
+      response.status(201).json({
+        user: await database.findUserById(result.lastInsertRowid),
+        csrfToken,
+      });
     } catch (error) {
       if (
         String(error.code).includes("SQLITE_CONSTRAINT") ||
