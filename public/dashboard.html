@@ -1,13 +1,60 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu espaço | Mamãe Margarida</title><link rel="stylesheet" href="/css/dashboard.css">
-</head>
-<body>
-  <header class="topbar"><a class="logo" href="/dashboard"><span>m</span> Mamãe Margarida</a><nav><a class="active" href="/dashboard">Meu espaço</a><a href="#encontros">Encontros</a></nav><button id="logout" class="logout">Sair <span>↗</span></button></header>
-  <main class="dashboard-main"><section class="hero"><div><p class="eyebrow">Quinta-feira, 26 de agosto</p><h1>Bom dia, <em id="user-name">querida</em>.</h1><p class="hero-copy">Que bom ter você por aqui. O que gostaria de cultivar hoje?</p></div><div class="sun-note"><span>✦</span><p>Seu espaço<br><strong>de presença</strong></p></div></section>
-  <section class="stats" aria-label="Resumo da comunidade"><div><strong id="member-count">—</strong><span>pessoas na comunidade</span></div><div><strong id="activity-count">—</strong><span>encontros este mês</span></div><div><strong id="next-date">—</strong><span>próximo encontro</span></div></section>
-  <section id="encontros" class="activities"><div class="section-heading"><div><p class="eyebrow">Para você</p><h2>Próximos encontros</h2></div><button class="filter">Ver calendário <span>→</span></button></div><div id="activity-list" class="activity-list"></div></section>
-  </main><footer><span>Feito com cuidado para nossa comunidade.</span><span>© 2026 Mamãe Margarida</span></footer><script src="/js/dashboard.js"></script>
-</body></html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu espaço | Mamãe Margarida</title>
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="logo" href="/dashboard"><span>m</span> Mamãe Margarida</a>
+      <nav>
+        <a class="active" href="/dashboard">Meu espaço</a
+        ><a href="#encontros">Encontros</a>
+      </nav>
+      <button id="logout" class="logout">Sair <span>↗</span></button>
+    </header>
+    <main class="dashboard-main">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Quinta-feira, 26 de agosto</p>
+          <h1>Bom dia, <em id="user-name">querida</em>.</h1>
+          <p class="hero-copy">
+            Que bom ter você por aqui. O que gostaria de cultivar hoje?
+          </p>
+        </div>
+        <div class="sun-note">
+          <span>✦</span>
+          <p>Seu espaço<br /><strong>de presença</strong></p>
+        </div>
+      </section>
+      <section class="stats" aria-label="Resumo da comunidade">
+        <div>
+          <strong id="member-count">—</strong><span>pessoas na comunidade</span>
+        </div>
+        <div>
+          <strong id="activity-count">—</strong><span>encontros este mês</span>
+        </div>
+        <div>
+          <strong id="next-date">—</strong><span>próximo encontro</span>
+        </div>
+      </section>
+      <section id="encontros" class="activities">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Para você</p>
+            <h2>Próximos encontros</h2>
+          </div>
+          <button class="filter">Ver calendário <span>→</span></button>
+        </div>
+        <div id="activity-list" class="activity-list"></div>
+      </section>
+    </main>
+    <footer>
+      <span>Feito com cuidado para nossa comunidade.</span
+      ><span>© 2026 Mamãe Margarida</span>
+    </footer>
+    <script src="/js/dashboard.js"></script>
+  </body>
+</html>

@@ -144,9 +144,18 @@ function sqliteRepository() {
 }
 
 function postgresRepository(connectionString) {
-  const { neon } = require("@neondatabase/serverless");
-  const sql = neon(connectionString);
+  const { Pool } = require("pg");
+  const pool = new Pool({
+    connectionString,
+    ssl: { rejectUnauthorized: false },
+    max: 1,
+  });
   let initialize;
+
+  async function sql(statement, parameters = []) {
+    const result = await pool.query(statement, parameters);
+    return result.rows;
+  }
 
   async function ready() {
     if (!initialize) initialize = initializeSchema();
