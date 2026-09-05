@@ -8,16 +8,24 @@ const submitLabel = document.querySelector("#submit-label");
 const switchLabel = document.querySelector("#switch-label");
 let isRegistering = false;
 let csrfToken = null;
+let csrfRequest = null;
 
 async function loadCsrfToken() {
-  const response = await fetch("/api/auth/csrf", {
-    credentials: "same-origin",
-  });
-  if (!response.ok)
-    throw new Error(
-      "Não foi possível preparar o formulário. Atualize a página.",
-    );
-  ({ csrfToken } = await response.json());
+  if (csrfRequest) return csrfRequest;
+  csrfRequest = fetch("/api/auth/csrf", { credentials: "same-origin" })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(
+          "Não foi possível preparar o formulário. Atualize a página.",
+        );
+      }
+      ({ csrfToken } = await response.json());
+    })
+    .catch((error) => {
+      csrfRequest = null;
+      throw error;
+    });
+  return csrfRequest;
 }
 
 function renderMode() {

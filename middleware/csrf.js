@@ -4,18 +4,25 @@ function createToken() {
   return crypto.randomBytes(32).toString("hex");
 }
 
-function getCsrfToken(request, response) {
+function getCsrfToken(request, response, next) {
   if (!request.session.csrfToken) {
     request.session.csrfToken = createToken();
   }
-  response.json({ csrfToken: request.session.csrfToken });
+  request.session.save((error) => {
+    if (error) return next(error);
+    response.json({ csrfToken: request.session.csrfToken });
+  });
 }
 
 function requireCsrf(request, response, next) {
   const expected = request.session.csrfToken;
   const received = request.get("X-CSRF-Token");
   if (!expected || !received) {
-    return response.status(403).json({ error: "Solicitacao invalida. Atualize a pagina e tente novamente." });
+    return response
+      .status(403)
+      .json({
+        error: "Solicitacao invalida. Atualize a pagina e tente novamente.",
+      });
   }
 
   const expectedBuffer = Buffer.from(expected);
@@ -24,7 +31,11 @@ function requireCsrf(request, response, next) {
     expectedBuffer.length !== receivedBuffer.length ||
     !crypto.timingSafeEqual(expectedBuffer, receivedBuffer)
   ) {
-    return response.status(403).json({ error: "Solicitacao invalida. Atualize a pagina e tente novamente." });
+    return response
+      .status(403)
+      .json({
+        error: "Solicitacao invalida. Atualize a pagina e tente novamente.",
+      });
   }
   next();
 }
