@@ -1,4 +1,5 @@
 const path = require("path");
+const os = require("os");
 const { DatabaseSync } = require("node:sqlite");
 const bcrypt = require("bcryptjs");
 
@@ -55,9 +56,11 @@ function seedSqliteData(database) {
 
 function createSqliteDatabase() {
   const defaultDatabasePath = process.env.VERCEL
-    ? path.join(process.env.TMPDIR || "/tmp", "portal-mamae-margarida.sqlite")
+    ? path.join(os.tmpdir(), "portal-mamae-margarida.sqlite")
     : path.join(__dirname, "..", "database.sqlite");
-  const database = new DatabaseSync(process.env.DATABASE_PATH || defaultDatabasePath);
+  const database = new DatabaseSync(
+    process.env.DATABASE_PATH || defaultDatabasePath,
+  );
   database.exec("PRAGMA journal_mode = WAL");
   database.exec("PRAGMA foreign_keys = ON");
   database.exec(`
@@ -111,7 +114,9 @@ function sqliteRepository() {
         )
         .run(sid, data, expiresAt),
     touchSession: async (sid, expiresAt) =>
-      database.prepare("UPDATE sessions SET expires_at = ? WHERE sid = ?").run(expiresAt, sid),
+      database
+        .prepare("UPDATE sessions SET expires_at = ? WHERE sid = ?")
+        .run(expiresAt, sid),
     deleteSession: async (sid) =>
       database.prepare("DELETE FROM sessions WHERE sid = ?").run(sid),
     deleteExpiredSessions: async (now) =>
@@ -175,14 +180,18 @@ function postgresRepository(connectionString) {
         expires_at BIGINT NOT NULL
       );
     `);
-    await sql("CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at)");
+    await sql(
+      "CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at)",
+    );
     await seedPostgresData();
   }
 
   async function seedPostgresData() {
     if (process.env.SEED_DEMO_DATA !== "true") return;
 
-    const [{ count: userCount }] = await sql("SELECT COUNT(*)::int AS count FROM users");
+    const [{ count: userCount }] = await sql(
+      "SELECT COUNT(*)::int AS count FROM users",
+    );
     if (userCount === 0) {
       await sql(
         "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) ON CONFLICT (email) DO NOTHING",
@@ -259,8 +268,12 @@ function postgresRepository(connectionString) {
         [sid, data, expiresAt],
       ),
     touchSession: async (sid, expiresAt) =>
-      query("UPDATE sessions SET expires_at = $1 WHERE sid = $2", [expiresAt, sid]),
-    deleteSession: async (sid) => query("DELETE FROM sessions WHERE sid = $1", [sid]),
+      query("UPDATE sessions SET expires_at = $1 WHERE sid = $2", [
+        expiresAt,
+        sid,
+      ]),
+    deleteSession: async (sid) =>
+      query("DELETE FROM sessions WHERE sid = $1", [sid]),
     deleteExpiredSessions: async (now) =>
       query("DELETE FROM sessions WHERE expires_at <= $1", [now]),
     listActivities: async () =>
@@ -271,7 +284,9 @@ function postgresRepository(connectionString) {
       const [activityRows, memberRows, nextActivityRows] = await Promise.all([
         query("SELECT COUNT(*)::int AS count FROM activities"),
         query("SELECT COUNT(*)::int AS count FROM users"),
-        query("SELECT date::text AS date FROM activities WHERE date >= CURRENT_DATE ORDER BY date ASC LIMIT 1"),
+        query(
+          "SELECT date::text AS date FROM activities WHERE date >= CURRENT_DATE ORDER BY date ASC LIMIT 1",
+        ),
       ]);
       return {
         activities: activityRows[0].count,
