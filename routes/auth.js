@@ -48,7 +48,7 @@ router.get("/csrf", getCsrfToken);
 router.post("/login", loginLimit, requireCsrf, async (request, response, next) => {
   try {
     const { email, password } = request.body;
-    const user = database.findUserByEmail(normalizeEmail(email));
+    const user = await database.findUserByEmail(normalizeEmail(email));
     if (!user || !(await bcrypt.compare(String(password || ""), user.password))) {
       return response.status(401).json({ error: "Email ou senha incorretos." });
     }
@@ -65,7 +65,7 @@ router.post("/register", registerLimit, requireCsrf, async (request, response, n
   if (validation.error) return response.status(400).json({ error: validation.error });
 
   try {
-    const result = database.createUser(
+    const result = await database.createUser(
       validation.normalizedName,
       validation.normalizedEmail,
       await bcrypt.hash(validation.normalizedPassword, 12),
@@ -73,7 +73,7 @@ router.post("/register", registerLimit, requireCsrf, async (request, response, n
     const csrfToken = await createAuthenticatedSession(request, result.lastInsertRowid);
     response
       .status(201)
-      .json({ user: database.findUserById(result.lastInsertRowid), csrfToken });
+      .json({ user: await database.findUserById(result.lastInsertRowid), csrfToken });
   } catch (error) {
     if (String(error.code).includes("SQLITE_CONSTRAINT")) {
       return response
@@ -92,11 +92,15 @@ router.post("/logout", requireCsrf, (request, response, next) => {
   });
 });
 
-router.get("/me", (request, response) => {
-  const user = request.session.userId
-    ? database.findUserById(request.session.userId)
-    : null;
-  response.json({ user: user || null });
+router.get("/me", async (request, response, next) => {
+  try {
+    const user = request.session.userId
+      ? await database.findUserById(request.session.userId)
+      : null;
+    response.json({ user: user || null });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

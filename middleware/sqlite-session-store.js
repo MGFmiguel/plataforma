@@ -8,40 +8,29 @@ class SqliteSessionStore extends session.Store {
   }
 
   get(sid, callback) {
-    try {
-      const row = this.database.getSession(sid);
-      callback(null, row ? JSON.parse(row.data) : null);
-    } catch (error) {
-      callback(error);
-    }
+    this.database
+      .getSession(sid)
+      .then((row) => callback(null, row ? JSON.parse(row.data) : null))
+      .catch(callback);
   }
 
   set(sid, sessionData, callback = () => {}) {
-    try {
-      this.database.saveSession(sid, JSON.stringify(sessionData), this.getExpiry(sessionData));
-      this.cleanup();
-      callback(null);
-    } catch (error) {
-      callback(error);
-    }
+    this.database
+      .saveSession(sid, JSON.stringify(sessionData), this.getExpiry(sessionData))
+      .then(() => this.cleanup())
+      .then(() => callback(null))
+      .catch(callback);
   }
 
   destroy(sid, callback = () => {}) {
-    try {
-      this.database.deleteSession(sid);
-      callback(null);
-    } catch (error) {
-      callback(error);
-    }
+    this.database.deleteSession(sid).then(() => callback(null)).catch(callback);
   }
 
   touch(sid, sessionData, callback = () => {}) {
-    try {
-      this.database.touchSession(sid, this.getExpiry(sessionData));
-      callback(null);
-    } catch (error) {
-      callback(error);
-    }
+    this.database
+      .touchSession(sid, this.getExpiry(sessionData))
+      .then(() => callback(null))
+      .catch(callback);
   }
 
   getExpiry(sessionData) {
@@ -49,10 +38,10 @@ class SqliteSessionStore extends session.Store {
     return Number.isFinite(expiry) ? expiry : Date.now() + 8 * 60 * 60 * 1000;
   }
 
-  cleanup() {
+  async cleanup() {
     this.requestsSinceCleanup += 1;
     if (this.requestsSinceCleanup >= 100) {
-      this.database.deleteExpiredSessions(Date.now());
+      await this.database.deleteExpiredSessions(Date.now());
       this.requestsSinceCleanup = 0;
     }
   }
