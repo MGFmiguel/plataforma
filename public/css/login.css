@@ -1,0 +1,251 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap");
+:root {
+  --ink: #24332d;
+  --muted: #718078;
+  --sage: #a8c5ae;
+  --cream: #fbfaf5;
+  --coral: #e88972;
+  --line: #dbe4dc;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "DM Sans", sans-serif;
+}
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 48% 52%;
+}
+.welcome-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10vw;
+  background: #dceadf;
+  overflow: hidden;
+}
+.welcome-panel:after {
+  content: "";
+  position: absolute;
+  width: 470px;
+  height: 470px;
+  border: 1px solid rgba(66, 111, 77, 0.18);
+  border-radius: 50%;
+  right: -200px;
+  bottom: -170px;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--coral);
+  color: #fff;
+  font-family: Fraunces, serif;
+  font-size: 30px;
+  font-style: italic;
+}
+.eyebrow {
+  margin: 25px 0 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #688070;
+}
+.welcome-panel h1 {
+  max-width: 510px;
+  margin: 0;
+  font:
+    600 clamp(42px, 5vw, 72px)/1.05 Fraunces,
+    serif;
+  letter-spacing: -1px;
+}
+.welcome-panel h1 em {
+  color: #638b6f;
+  font-weight: 500;
+}
+.welcome-copy {
+  max-width: 390px;
+  margin: 28px 0 0;
+  color: #65776d;
+  font-size: 17px;
+  line-height: 1.65;
+}
+.quote {
+  max-width: 320px;
+  margin-top: 105px;
+  padding-left: 18px;
+  border-left: 2px solid var(--coral);
+  font:
+    500 18px/1.45 Fraunces,
+    serif;
+  color: #53705c;
+}
+.leaf-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+.leaf-line span {
+  width: 23px;
+  height: 8px;
+  border-radius: 100% 0;
+  background: #8fb29a;
+  transform: rotate(25deg);
+}
+.leaf-line i {
+  width: 2px;
+  height: 26px;
+  background: #8fb29a;
+  transform: rotate(35deg);
+}
+.auth-panel {
+  display: grid;
+  place-items: center;
+  padding: 40px;
+}
+.auth-card {
+  width: min(100%, 390px);
+}
+.mobile-brand {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  font:
+    600 17px Fraunces,
+    serif;
+}
+.mobile-brand .brand-mark {
+  width: 34px;
+  height: 34px;
+  font-size: 22px;
+}
+.auth-card h2 {
+  margin: 0;
+  font:
+    600 40px Fraunces,
+    serif;
+}
+.form-subtitle {
+  margin: 10px 0 32px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.auth-card label {
+  display: block;
+  margin: 18px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #53645b;
+}
+.auth-card input {
+  width: 100%;
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font:
+    15px "DM Sans",
+    sans-serif;
+}
+.auth-card input:focus {
+  border-color: var(--coral);
+}
+.hidden {
+  display: none !important;
+}
+.primary-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 32px;
+  padding: 16px 19px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--ink);
+  color: white;
+  cursor: pointer;
+  font:
+    600 14px "DM Sans",
+    sans-serif;
+}
+.primary-button:hover {
+  background: #3c5548;
+}
+.form-message {
+  min-height: 20px;
+  margin: 14px 0;
+  color: #c25f4c;
+  font-size: 12px;
+}
+.switch-copy {
+  text-align: center;
+  margin: 24px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.switch-copy button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #62866b;
+  cursor: pointer;
+  font:
+    600 13px "DM Sans",
+    sans-serif;
+}
+.demo-hint {
+  text-align: center;
+  margin-top: 42px;
+  color: #a0aaa3;
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .login-shell {
+    display: block;
+  }
+  .welcome-panel {
+    min-height: 370px;
+    padding: 42px 28px;
+    justify-content: flex-end;
+  }
+  .welcome-panel .brand-mark {
+    display: none;
+  }
+  .welcome-panel .eyebrow {
+    margin: 0 0 12px;
+  }
+  .welcome-panel h1 {
+    font-size: 46px;
+  }
+  .welcome-copy {
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  .quote,
+  .leaf-line {
+    display: none;
+  }
+  .auth-panel {
+    padding: 38px 28px;
+  }
+  .mobile-brand {
+    display: flex;
+    margin-bottom: 30px;
+  }
+  .auth-card .eyebrow {
+    margin-top: 0;
+  }
+}

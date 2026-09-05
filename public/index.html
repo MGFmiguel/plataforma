@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mamãe Margarida | Um lugar para florescer</title>
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <main class="login-shell">
+      <section class="welcome-panel">
+        <div class="brand-mark" aria-hidden="true">m</div>
+        <p class="eyebrow">Portal Mamãe Margarida</p>
+        <h1>Um lugar para <em>florescer</em> junto.</h1>
+        <p class="welcome-copy">
+          Encontros, cuidado e conversas que fortalecem a nossa comunidade.
+        </p>
+        <div class="quote">
+          “Cuidar de si também é uma forma bonita de cuidar do mundo.”
+        </div>
+        <div class="leaf-line" aria-hidden="true">
+          <span></span><i></i><span></span>
+        </div>
+      </section>
+      <section class="auth-panel">
+        <div class="auth-card">
+          <div class="mobile-brand">
+            <span class="brand-mark">m</span><span>Mamãe Margarida</span>
+          </div>
+          <p class="eyebrow" id="form-eyebrow">Bom ter você aqui</p>
+          <h2 id="form-title">Entrar no portal</h2>
+          <p class="form-subtitle" id="form-subtitle">
+            Acesse seu espaço de cuidado e conexão.
+          </p>
+          <form id="auth-form">
+            <label class="name-field hidden" for="name"
+              >Como podemos chamar você?</label
+            >
+            <input
+              class="name-field hidden"
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Seu nome"
+              autocomplete="name"
+              minlength="2"
+              maxlength="100"
+            />
+            <label for="email">Seu email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="voce@email.com"
+              autocomplete="email"
+              maxlength="254"
+              required
+            />
+            <label for="password">Sua senha</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="De 6 a 8 caracteres"
+              autocomplete="current-password"
+              minlength="6"
+              maxlength="8"
+              required
+            />
+            <button type="submit" class="primary-button">
+              <span id="submit-label">Entrar</span
+              ><span aria-hidden="true">→</span>
+            </button>
+            <p class="form-message" role="alert"></p>
+          </form>
+          <p class="switch-copy">
+            <span id="switch-label">Ainda não faz parte?</span>
+            <button id="switch-mode" type="button">Criar minha conta</button>
+          </p>
+        </div>
+      </section>
+    </main>
+    <script src="/js/login.js"></script>
+  </body>
+</html>
